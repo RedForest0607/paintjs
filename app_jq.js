@@ -47,9 +47,9 @@ function onMouseMove(event){
 
 function changeColor(event){//브러시 색 바꾸는 함수
     ctx.strokeStyle = event.target.style.backgroundColor;
-    console.log();
+    console.log("color changed");
 }
-Array.from(colors).forEach(color=> $("color").on("click",changeColor));
+Array.from(colors).forEach(color => $(color).bind("click", changeColor));
 //                         만들어진 배열이름을 셀렉트 해줌, 이벤트는 on으로 만든다
 
 if(canvas){
