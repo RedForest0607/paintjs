@@ -1,54 +1,56 @@
-const colors = $(".jsColor");
+const colors = $(".jsColor"); //제이쿼리는 다음과 같은 방법으로 html 요소를 가져온다
 const canvas = $("#jsCanvas");
 const brushSize = $("#jsRange");
 const mode = $("#jsMode");
-const ctx = $("2d");
+const ctx = $("canvas")[0].getContext('2d');
+
+let painting = false;
 
 ctx.strokeStyle = "#2c2c2c";
 ctx.strokelineWidth = 2.5;
-let painting = false;
+
+function changeBrushSize(event){//브러시 사이즈 바꾸기
+    ctx.lineWidth = event.target.value; 
+}
+if(brushSize){
+    brushSize.bind("input",changeBrushSize);
+}
 
 startPainting = function() {
     painting = true;
-    console.log("onMouseMove");
-}
-changeColor = function(event){
-    ctx.strokeStyle = event.target.style.backgroundColor;
 }
 stopPainting = function(){
     painting=false;
 }
 
-onMouseMove = function(){
+function onMouseLeave(event){ //마우스가 캔버스를 벗어나면 그리는것을 그만한다
     stopPainting();
-    console.log("onMouseMove");
-}
-function onMouseLeave(event){
-    stopPainting();
-}
-function changeBrushSize(event){
-    ctx.lineWidth = event.target.value;
-    console.log(ctx.strokelineWidth);  
-}
-if(canvas){
-    canvas.bind("mousemove", onMouseMove);
 }
 
-//마우스 좌표 가져옴
+//캔버스에 선을 그리는 함수
 function onMouseMove(event){
     const x = event.offsetX; //client좌표는 전체 윈도우에 대한 좌표, offset은 내부에 대한 좌표
     const y = event.offsetY;
-    if(!painting){
+    if(!painting){//마우스가 캔버스위에 돌아다니는중
+        console.log("not Painting");
         ctx.beginPath();
-        //ctx.moveTo(x, y);
-    }else{
-        console.log(`drawing ${x} ${y} to`);
+        ctx.moveTo(x, y);
+    }else{//클릭해서 직접 그릴떄
+        console.log("drawing");
         ctx.lineTo(x,y);
         ctx.stroke();
-        console.log(`${x} ${y}`);
     }
 }
-if(brushSize){
-    brushSize.bind("input",changeBrushSize);
+
+changeColor = function(event){//브러시 색 바꾸는 함수
+    ctx.strokeStyle = event.target.style.backgroundColor;
 }
-Array.from(colors).forEach(color=> on("click",changeColor));
+Array.from(colors).forEach(color=> $("color").on("click",changeColor));
+//                         만들어진 배열이름을 셀렉트 해줌, 이벤트는 on으로 만든다
+
+if(canvas){
+    canvas.on("mousemove", onMouseMove);
+    canvas.on("mousedown", startPainting);
+    canvas.on("mouseup", stopPainting);
+    canvas.on("mouseleave", stopPainting);
+}
