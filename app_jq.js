@@ -2,7 +2,10 @@ const colors = $(".jsColor"); //제이쿼리는 다음과 같은 방법으로 ht
 const canvas = $("#jsCanvas");
 const brushSize = $("#jsRange");
 const mode = $("#jsMode");
-const ctx = $("canvas")[0].getContext('2d');
+const ctx = $("#jsCanvas")[0].getContext("2d");
+
+canvas.width = 700;
+canvas.height = 700;
 
 let painting = false;
 
@@ -16,15 +19,11 @@ if(brushSize){
     brushSize.bind("input",changeBrushSize);
 }
 
-startPainting = function() {
+function startPainting() {
     painting = true;
 }
-stopPainting = function(){
+function stopPainting(){
     painting=false;
-}
-
-function onMouseLeave(event){ //마우스가 캔버스를 벗어나면 그리는것을 그만한다
-    stopPainting();
 }
 
 //캔버스에 선을 그리는 함수
@@ -33,8 +32,12 @@ function onMouseMove(event){
     const y = event.offsetY;
     if(!painting){//마우스가 캔버스위에 돌아다니는중
         console.log("not Painting");
-        ctx.beginPath();
+        try{ctx.beginPath();
         ctx.moveTo(x, y);
+        }catch(error){
+            console.log("not working");
+        }
+        
     }else{//클릭해서 직접 그릴떄
         console.log("drawing");
         ctx.lineTo(x,y);
@@ -42,8 +45,9 @@ function onMouseMove(event){
     }
 }
 
-changeColor = function(event){//브러시 색 바꾸는 함수
+function changeColor(event){//브러시 색 바꾸는 함수
     ctx.strokeStyle = event.target.style.backgroundColor;
+    console.log();
 }
 Array.from(colors).forEach(color=> $("color").on("click",changeColor));
 //                         만들어진 배열이름을 셀렉트 해줌, 이벤트는 on으로 만든다
