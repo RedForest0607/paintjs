@@ -71,4 +71,4 @@ if(brushSize){
 }
 
 //자식들에 게 각각의 이벤트 리스너를 만들어준다
-Array.from(colors).forEach(color=> $('color').addEventListener("click",changeColor));
+Array.from(colors).forEach(color=> color.addEventListener("click",changeColor));
